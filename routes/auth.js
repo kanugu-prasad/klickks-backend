@@ -8,12 +8,15 @@ const SECRET_KEY = process.env.SECRET_KEY || "mysecret";
 
 // Register
 router.post("/register", (req, res) => {
+  console.log("Register request received:", req.body);
   const { name, email, password, confirmPassword } = req.body;
 
   if (!name || !email || !password || !confirmPassword) {
+    console.log("Missing fields error");
     return res.status(400).json({ error: "All fields are required" });
   }
   if (password !== confirmPassword) {
+    console.log("Password mismatch error");
     return res.status(400).json({ error: "Passwords do not match" });
   }
 
@@ -24,8 +27,10 @@ router.post("/register", (req, res) => {
     [name, email, hashedPassword],
     function (err) {
       if (err) {
+        console.log("Database error:", err);
         return res.status(400).json({ error: "User already exists" });
       }
+      console.log("User registered successfully");
       res.json({ message: "User registered successfully" });
     }
   );
@@ -33,14 +38,17 @@ router.post("/register", (req, res) => {
 
 // Login 
 router.post("/login", (req, res) => {
+  console.log("Login request received:", req.body);
   const { email, password } = req.body;
 
   db.get(`SELECT * FROM users WHERE email = ?`, [email], (err, user) => {
     if (err || !user) {
+      console.log("User not found or database error:", err);
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
     if (!bcrypt.compareSync(password, user.password)) {
+      console.log("Password mismatch");
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
@@ -50,6 +58,7 @@ router.post("/login", (req, res) => {
       { expiresIn: "1h" }
     );
 
+    console.log("Login successful, setting cookie");
     res.cookie("token", token, {
       httpOnly: true,
       secure: true, 
