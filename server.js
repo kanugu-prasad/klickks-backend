@@ -8,7 +8,7 @@ const authRoutes = require("./routes/auth");
 const app = express();
 
 app.use(cors({
-  origin: "https://klickks-frontend-sepia.vercel.app/",
+  origin: "https://klickks-frontend-sepia.vercel.app",
   credentials: true
 }));
 app.use(express.json());
