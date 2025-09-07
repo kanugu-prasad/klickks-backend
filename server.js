@@ -20,6 +20,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running!", timestamp: new Date().toISOString() });
+});
+
 app.use("/api", authRoutes); 
 
 const PORT = process.env.PORT || 5000;
