@@ -31,6 +31,16 @@ app.get("/", (req, res) => {
   res.json({ 
     message: "Backend is running!", 
     timestamp: new Date().toISOString(),
+    usersCount: users.length,
+    endpoints: ["/api/register", "/api/login", "/api/dashboard", "/api/logout"]
+  });
+});
+
+// Debug endpoint to test API routing
+app.get("/api/debug", (req, res) => {
+  res.json({ 
+    message: "API routing is working!",
+    timestamp: new Date().toISOString(),
     usersCount: users.length
   });
 });
